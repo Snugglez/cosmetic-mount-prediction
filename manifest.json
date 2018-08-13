@@ -1,0 +1,41 @@
+{
+	"files": {
+		"README.md": "49781a0e281a89ef2beab929b5f26540e5395387e63668aa10feea8c7f8fcfe3",
+		"config.json": {
+			"overwrite": false,
+			"hash": "d0677d5f8b040133ec4fefed7de228eedcdfcc273f7bddd03b574729c274f384"
+		},
+		"groundlist.json": "ba14dc1cc920d561025407e1fec692d033aceda82e901b300b3d6cf82e634a66",
+		"index.js": "6e340298f773f51e2536b22069f03e3af8998d6873758ccfdd4508bcd27c3ade",
+		"module.json": "b65ce08bc04e57c9e21dfb5461eabc20b80bb44c68a5cd0e06c6980ad49fdbbc",
+		"mount.json": {
+			"overwrite": false,
+			"hash": "e888a676e1926d0c08b5f11fb9116df58b62604b05846f39f8d6fc4dd0ba31f1"
+		},
+		"mountlist.json": "dd4d689b795646f56e94a80c2d6b621d94e940a13ccf7504244858bc4c9915aa"
+	},
+	"defs": {
+		"C_START_SKILL": [
+			6,
+			7
+		],
+		"C_UNMOUNT_VEHICLE": 1,
+		"S_ACCEPT_CONTRACT": 1,
+		"S_CANCEL_CONTRACT": 1,
+		"S_LOGIN": 10,
+		"S_MOUNT_VEHICLE": 2,
+		"S_REJECT_CONTRACT": 1,
+		"S_REQUEST_CONTRACT": 1,
+		"S_SHORTCUT_CHANGE": [
+			1,
+			2
+		],
+		"S_START_CLIENT_CUSTOM_SKILL": [
+			2,
+			3
+		],
+		"S_SYSTEM_MESSAGE": 1,
+		"S_UNMOUNT_VEHICLE": 2,
+		"S_USER_STATUS": 1
+	}
+}

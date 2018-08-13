@@ -1,2 +1,33 @@
-# cosmetic-mount-prediction
-The old mount prediction where you can still set your own mount
+#  Cosmetic-Mount-Prediction
+
+Removes ping tax related to mounts such as `skill -> mount` and `unmount -> skill`
+
+Also acts as a way to change your mount client side
+
+# Note
+
+The default mount is the flight suit mount, this is normal and can be easily changed. Please read.
+
+# Requirements
+[tera-game-state](https://github.com/hackerman-caali/tera-game-state) (if you are using [caali's](https://discord.gg/maqBmJV) proxy you already have this by default!)
+
+If you still have problems, make sure the folder is called `tera-game-state` and not `tera-game-state-master`
+
+# Commands
+Note, if using the commands in the proxy channel or `/8`, ignore the `!` prefix
+
+Command | Argument(s) | Example | Description
+---|---|---|---
+**!cmp** | on, off | !mp on| Turns the module either on or off (on by default)
+**!cmp** | unmount | !mp unmount| Forcefully dismounts you, can be used if something bugs out and you are unable to
+**!cmp** | set | !mp set 261| Used to set the type of mount you want your predicted mount to be(list of id's can be found below)
+
+# Mount list
+
+https://docs.google.com/spreadsheets/d/1ThLlpatnxwenbxnQiTOtxjoYqGVEulWdWE5nrKA_-6U/edit?usp=sharing
+
+# Warning
+DO NOT ATTEMPT TO FLY WHEN USING A GROUND MOUNT SERVER SIDE, YOU WILL TELEPORT
+
+# Known bugs:
+Sometimes mounting right after combat can use your actual mount instead of the one set by the module

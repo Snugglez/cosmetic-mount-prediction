@@ -1,0 +1,6 @@
+{
+	"disableAutoUpdate": false,
+    "options": {"niceName": "cMP"},
+	"servers": ["https://raw.githubusercontent.com/Snugglez/cosmetic-mount-prediction/master/"],
+	"supportUrl": "https://github.com/Snugglez/mount-prediction/blob/master/README.md"
+}
