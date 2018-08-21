@@ -1,11 +1,7 @@
-const 	Command = require('command'),
-		config = require('./config.json'),
-		GameState = require('tera-game-state'),
+const 	config = require('./config.json'),
 		path = require('path'),
 		fs = require('fs')
 module.exports = function mountpredict(d) {
-const 	c = Command(d),
-		g = GameState(d);
 
 let enabled = config.enabled,
 	sudo = config.sudo,
@@ -16,29 +12,28 @@ let enabled = config.enabled,
 	grounds = require('./groundlist.json')
 
 //commands o' plenty
-c.add("cmp", (option, value) => {
-switch (option) {
-case "on":
+d.command.add("cmp", {
+on() {
 enabled = true
-c.message(`mount prediction is now ${enabled ? 'enabled' : 'disabled'}.`)
-break;
-case "off":
+d.command.message(`[enabled]`)
+},
+off() {
 enabled = false
-c.message(`mount prediction is now ${enabled ? 'enabled' : 'disabled'}.`)
-break;
-case "set":
+d.command.message(`[disabled]`)
+},
+set(value) {
 customMount = parseInt(value);
 for (i = 0; i < INVALID.length; i++) {
 if(INVALID[i] == customMount){
-c.message('The value: '+customMount+' is invalid, try another.');
+d.command.message('The value: '+customMount+' is invalid, try another.');
 customMount = 0;}}
-c.message('Mount set to: '+value+'.');
+d.command.message('Mount set to: '+value+'.');
 saveMount()
-break;
-case "unmount":
-c.message(`Kill Switch Used`)
+},
+unmount() {
+d.command.message(`[unmounted]`)
 d.send('S_UNMOUNT_VEHICLE', 2, {
-gameId: g.me.gameId,
+gameId: d.game.me.gameId,
 skill: 12200016
 })
 d.send('S_SHORTCUT_CHANGE', 1, {
@@ -48,8 +43,20 @@ enable: false
 })
 d.send('C_UNMOUNT_VEHICLE', 1, {
 })
-break;
-}})
+},
+$default() {
+d.command.message("Command list")
+d.command.message(" ")
+d.command.message("cmp on/off")
+d.command.message("--Toggles mount prediction on or off")
+d.command.message(" ")
+d.command.message("cmp set #")
+d.command.message("--Set the type of mount you want(replace # with the number)")
+d.command.message(" ")
+d.command.message("cmp unmount")
+d.command.message("--Dismounts you incase something bugs out and you can't")
+}
+})
 	
 //custom mount copy/paste fiesta 
 const INVALID = [
@@ -68,9 +75,9 @@ fs.writeFileSync(path.join(__dirname, 'mount.json'), JSON.stringify(customMount)
 
 //cStartSkill hook instant mount function for flying mounts
 d.hook('C_START_SKILL', (d.base.majorPatchVersion >= 74) ? 7 : 6, (e) => {
-if(!enabled || g.me.inCombat || incontract || !mounts.includes(e.skill.id) || customMount < 1 || customMount > 293 || grounds.includes(customMount)) return
+if(!enabled || d.game.me.inCombat || incontract || !mounts.includes(e.skill.id) || customMount < 1 || customMount > 293 || grounds.includes(customMount)) return
 d.send('S_MOUNT_VEHICLE', 2, {
-gameId: g.me.gameId,
+gameId: d.game.me.gameId,
 id: customMount,
 skill: 12200016,
 unk: false
@@ -84,9 +91,9 @@ enable: true
 
 //cStartSkill hook instant mount function for ground mounts
 d.hook('C_START_SKILL', (d.base.majorPatchVersion >= 74) ? 7 : 6, (e) => {
-if(!enabled || g.me.inCombat || incontract || !mounts.includes(e.skill.id) || customMount < 1 || customMount > 293 || !grounds.includes(customMount)) return
+if(!enabled || d.game.me.inCombat || incontract || !mounts.includes(e.skill.id) || customMount < 1 || customMount > 293 || !grounds.includes(customMount)) return
 d.send('S_MOUNT_VEHICLE', 2, {
-gameId: g.me.gameId,
+gameId: d.game.me.gameId,
 id: customMount,
 skill: 12200016,
 unk: false
@@ -102,7 +109,7 @@ if(!enabled || !onMount || incontract || e.skill.id === 65000002 || e.skill.id =
 else if(mounts.includes(e.skill.id)){
 
 d.send('S_UNMOUNT_VEHICLE', 2, {
-gameId: g.me.gameId,
+gameId: d.game.me.gameId,
 skill: 12200016
 })
 
@@ -121,7 +128,7 @@ else if(e.skill.id === 65000001){
 d.send('C_UNMOUNT_VEHICLE', 1, {
 })
 d.send('S_UNMOUNT_VEHICLE', 2, {
-gameId: g.me.gameId,
+gameId: d.game.me.gameId,
 skill: 12200016
 })
 d.send('S_SHORTCUT_CHANGE', 1, {
@@ -146,7 +153,7 @@ d.hookOnce('S_START_CLIENT_CUSTOM_SKILL', (d.base.majorPatchVersion >= 74) ? 2 :
 //fix for teleporting while on a flying mount (im retarded and forgot a gameId check...)
 d.hook('S_UNMOUNT_VEHICLE', 2, (e) => {
 if(!enabled) return
-else if(g.me.is(e.gameId)){
+else if(d.game.me.is(e.gameId)){
 d.send('S_SHORTCUT_CHANGE', 1, {
 huntingZoneId: 7031,
 id: 300001,
@@ -157,7 +164,7 @@ enable: false
 
 d.hook('S_MOUNT_VEHICLE', 2, (e) => {
 if(!enabled) return;
-if(g.me.is(e.gameId))
+if(d.game.me.is(e.gameId))
 incontract = false
 })
 
@@ -165,14 +172,14 @@ incontract = false
 d.hook('S_SYSTEM_MESSAGE', 1, (e) => {
 if(e.message.includes('@1007') || e.message.includes('@36') || e.message.includes('@3880'))
 d.send('S_UNMOUNT_VEHICLE', 2, {
-gameId: g.me.gameId,
+gameId: d.game.me.gameId,
 skill: 12200016
 })
 })
 
 //temp hooks that will be replaced with game state once im not retarded
-	d.hook('S_MOUNT_VEHICLE', 2, e => { if(g.me.is(e.gameId)) onMount = true })
-	d.hook('S_UNMOUNT_VEHICLE', 2, e => { if(g.me.is(e.gameId)) onMount = false })
+	d.hook('S_MOUNT_VEHICLE', 2, e => { if(d.game.me.is(e.gameId)) onMount = true })
+	d.hook('S_UNMOUNT_VEHICLE', 2, e => { if(d.game.me.is(e.gameId)) onMount = false })
 	d.hook('S_REQUEST_CONTRACT', 1, event => { incontract = true })
 	d.hook('S_ACCEPT_CONTRACT', 1, event => { incontract = false })
 	d.hook('S_REJECT_CONTRACT', 1, event => { incontract = false })
